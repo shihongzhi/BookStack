@@ -3,7 +3,7 @@ from mysite.auth.views import signup_view,login_view,logout_view
 from mysite.views import upload,upload_result,home,search_result,subject,download,about,contact
 from django.contrib import admin
 admin.autodiscover()
-
+#url
 urlpatterns = patterns('',
     # Examples:
     # url(r'^$', 'mysite.views.home', name='home'),
