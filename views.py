@@ -104,6 +104,26 @@ def subject(request, isbn):
 		return render_to_response('error.html')
 	return render_to_response('subject.html', {'book':book,'user':request.user})
 
+# add comment to a subject book
+def subject_comment(request, isbn):
+    if request.user.is_authenticated:
+        try:
+            book = Book.objects.get(ISBN=isbn)
+            pub_date = datetime.date.today()
+            user = request.user
+            if request.method == 'POST':
+                content = request.POST['comment']
+            else:
+                content = None
+            if content:
+                Comment.objects.create(author=user,
+                                       book=book,
+                                       pub_date=pub_date,
+                                       content=content)
+
+        except :
+            print 'except'
+    return HttpResponseRedirect("/subject/%s/" % isbn)
 def about(request):
         return render_to_response('about.html', {'user':request.user})
 # contact

@@ -11,7 +11,7 @@
 		 <div class="cover"><a href={{ book.image_src }} title={{ book.title }}><img src={{ book.image_src }} alt={{ book.title }} width="110" height="130"></a>
 		 </div>
 		 <div class="info">
-		   <p><span>书名：</span><a href="/download/{{ book.ISBN }}">{{ book.title }}</a></p>
+		   <p><span>书名：</span><a href=download/{{ subject_href }}>{{ book.title }}</a></p>
 		   <p><span>作者：</span>{{ book.author }}</p><p><span>出版日期：</span>{{ book.publish_date }}</p>
 		   <p><span>出版社：</span>{{ book.publisher }}</p><p><span>页数：</span>{{ book.pages }}</p>
 		   <p><span>ISBN：</span>{{ book.ISBN }}</p>
@@ -22,12 +22,32 @@
  </div>	<!-- book -->
 
  <div id="comment">
-   <h3 class="title">发表对本书的看法</h3>
+   <h3 class="title">读者对本书的看法</h3>
+   {% if comments %}
+   <h3 id="comments" class="title">本书有 {{ comments|length }} 条评论 </h3>
+   {% endif %}
+   <ol class="commentlist"> 
+   {% for comment in comments %}
+	<li class="comment by user {{ comment.author.username }}">
+	  <div class="comment-author vcard">
+		<img alt='' src='https://secure.gravatar.com/avatar/2fd30ae8eef473fd691d98224ba097d1?s=140&d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-140.png class='avatar avatar-75 photo' height='75' width='75' />
+		<cite>{{ comment.author.username }}</cite>
+	  </div>
+	  <div class="comment-meta commentmetadata">
+		<p>{{ comment.pub_date }}</p>
+	  <p>{{ comment.content }}</p>
+	  </div> 
+	</li> 
+   {% endfor %}
+   </ol> <!-- comment list -->
+   
+   {%  if user.is_authenticated %}
    <p class="notice">对本书的看法、疑惑都可以一说。</p>	
-    <form method="post" action="">
+    <form method="post" action="comment/">
 	  <p><textarea name="comment" id="comment" cols="100%" rows="10"></textarea></p>
 	  <p><input type="submit" value="发表评论"></p>
 	</form>	
+	{% endif %}
  </div>	<!-- comment -->
 
 
