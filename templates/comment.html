@@ -1,0 +1,28 @@
+
+<h3 id="comments" class="title">本书有 {{ comments.total }} 条评论 </h3> 
+ 
+	<ol class="commentlist"> 
+	  {{ for comment in comments }}
+	  <li> comment.context </li>
+	</ol> 
+	
+ 
+ 
+ 
+<div id="comment"> 
+ 
+  <div id="cancel-comment-reply" style="display: none;"> 
+	<small></small> 
+  </div> 
+ 
+  <h3 class="title">发表对本书的看法</h3><p class="notice">说点呗</p>		<form action="/" method="post" id="commentform"> 
+	<p> 
+	  <textarea name="comment" id="comment" cols="100%" rows="10" tabindex="4"></textarea> 
+	</p> 
+	<p class="action"> 
+	  <input name="submit" type="submit" id="submit" class="f-submit" tabindex="5" value="提交评论" /> 
+	  
+	</p> 
+  </form> 
+</div> 
+
