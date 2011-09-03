@@ -1,7 +1,7 @@
 # Create your views here.
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
-from mysite.auth.models import SignupForm,LoginForm
+from BookStack.auth.models import SignupForm,LoginForm
 from django.contrib.auth import authenticate, login,logout 
 
 def signup_view(request):
