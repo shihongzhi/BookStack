@@ -12,3 +12,17 @@ class Book(models.Model):
 
 	def __unicode__(self):
 		return self.title
+
+
+class Comment(models.Model):
+    author = models.ForeignKey(User)
+    book = models.ForeignKey(Book)
+    pub_date = models.DateField()
+    content = models.TextField()
+
+    class Meta:
+        ordering = ['pub_date']
+
+    def __unicode__(self):
+        return "comment by %s at %s" % (self.author.username, self.pub_date.strftime("%Y/%b/%d").lower())
+
