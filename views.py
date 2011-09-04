@@ -3,9 +3,9 @@ from django.db import IntegrityError
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
 import json,urllib2,datetime
-from mysite.books.models import Book
+from BookStack.books.models import Book
 import re
-from mysite import settings
+from BookStack import settings
 import os
 
 def handle_uploaded_file(f,ISBN):
@@ -14,7 +14,7 @@ def handle_uploaded_file(f,ISBN):
 	else:
 		filename = ISBN+'.txt'
 	print os.getcwd()
-	destination = open('/home/shihongzhi/Documents/mysite/uploadfile/'+filename,'wb')
+	destination = open('/home/shihongzhi/Documents/BookStack/uploadfile/'+filename,'wb')
 	for chunk in f.chunks():
 		destination.write(chunk)
 

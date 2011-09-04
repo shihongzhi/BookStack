@@ -1,5 +1,5 @@
 import os.path
-# Django settings for mysite project.
+# Django settings for BookStack project.
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -46,7 +46,7 @@ USE_L10N = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
-MEDIA_ROOT = '/home/shihongzhi/Document/mysite/uploadfile/'
+MEDIA_ROOT = '/home/shihongzhi/Document/BookStack/uploadfile/'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
@@ -103,7 +103,7 @@ MIDDLEWARE_CLASSES = (
 	'django.middleware.csrf.CsrfResponseMiddleware',
 )
 
-ROOT_URLCONF = 'mysite.urls'
+ROOT_URLCONF = 'BookStack.urls'
 
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
@@ -123,8 +123,8 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
-	'mysite.books',
-	'mysite.auth',
+	'BookStack.books',
+	'BookStack.auth',
 )
 
 # A sample logging configuration. The only tangible logging
