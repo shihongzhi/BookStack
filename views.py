@@ -1,9 +1,9 @@
 #coding:utf-8
 from django.db import IntegrityError
-from django.http import HttpResponse
+from django.http import HttpResponse,HttpResponseRedirect
 from django.shortcuts import render_to_response
 import json,urllib2,datetime
-from BookStack.books.models import Book
+from BookStack.books.models import Book,Comment
 import re
 from BookStack import settings
 import os
@@ -33,7 +33,7 @@ def upload_result(request):
 	if request.method == 'POST':
 		ISBN = request.POST.get('ISBN','1').strip()
 		file_obj = request.FILES.get('file',None)
-		handle_uploaded_file(file_obj, ISBN)
+		#handle_uploaded_file(file_obj, ISBN)
 	key = '04bbcb4043cc67600e3361c0cb653620'
 	url = 'http://api.douban.com/book/subject/isbn/%s?apikey=%s&alt=json'%(ISBN,key)
 	try:
@@ -61,8 +61,11 @@ def upload_result(request):
 		b1.save()
 	except IntegrityError:
 		error = u'这本书已经存在！'
-		return render_to_response('error.html',{'error':error})
-	return render_to_response('subject.html',{'book':b1}) 
+		#return render_to_response('error.html',{'error':error})
+                return HttpResponseRedirect("/subject/%s/" % ISBN)
+        handle_uploaded_file(file_obj, ISBN)
+	return HttpResponseRedirect("/subject/%s/" % ISBN)
+ 
 
 def home(request):
     books = Book.objects.all()
@@ -75,8 +78,9 @@ def search_result(request):
 	else:
 		keys = ''
 	if keys == '':
-		error = u'搜索为空'
-		return render_to_response('error.html',{'error':error})
+		#error = u'搜索为空'
+		#return render_to_response('error.html',{'error':error})
+                render_to_response('home.html', {'user':request.user })
 	dict = {}
 	for key in keys.split():
 		books = Book.objects.filter(title__icontains = key)
@@ -96,13 +100,15 @@ def search_result(request):
 	return render_to_response('search_result.html',{"books":books,'user':request.user})
 
 def subject(request, isbn):
-	try:
-		print isbn
-		book = Book.objects.get(ISBN = isbn)
-		print book,isbn
-	except :
-		return render_to_response('error.html')
-	return render_to_response('subject.html', {'book':book,'user':request.user})
+    #try:
+    book = Book.objects.get(ISBN=isbn)
+    comments = Comment.objects.filter(book=book)
+    #except :
+
+        #return render_to_response('error.html')
+    return render_to_response('subject.html', {'book':book,
+                                               'user':request.user,
+                                               'comments':comments} )
 
 # add comment to a subject book
 def subject_comment(request, isbn):

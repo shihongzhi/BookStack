@@ -1,6 +1,6 @@
 from django.conf.urls.defaults import patterns, include, url
 from BookStack.auth.views import signup_view,login_view,logout_view
-from BookStack.views import upload,upload_result,home,search_result,subject,download,about,contact
+from BookStack.views import upload,upload_result,home,search_result,subject,download,about,contact,subject_comment
 from django.contrib import admin
 admin.autodiscover()
 #url
@@ -25,4 +25,5 @@ urlpatterns = patterns('',
     (r'^about/$',about),
     (r'^contact/$',contact),
     (r'^logout/$',logout_view),
+    (r'^subject/(\w+)/comment/$',subject_comment),
 )
