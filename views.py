@@ -87,17 +87,19 @@ def search_result(request):
 		for book in books:
 			dict[book] = dict.get(book, 0) + len(key)
 
-	'''
-	total = len(dict)
-	if total == 0:
-		return render_to_response('error.html',{'error':u'没有结果'})
-	if dict.values()[0] < len(''.join(keys.split()))*0.8:
-		Tips = 'No book fits well , so we list %d probable ~' %total
-	else:
-		Tips = 'There is %d books found :' % total
-	'''
+
+        total = len(dict)
+        # no book found
+        if total == 0:
+            Tips = '没有找到相关书籍'
+            return render_to_response('search_result.html',{"books":None,"Tips":Tips,'user':request.user})
+        if dict.values()[0] < len(keys)*0.8:
+            Tips = '没有搜索到匹配的书 , 可能这 %d 本书中有你喜欢的 ~' %total
+        else:
+            Tips = '总共找到 %d 本书' % total
+        # sort
 	books = [k for k,v in sorted(dict.items(),lambda x, y: -cmp(x[1], y[1]))]
-	return render_to_response('search_result.html',{"books":books,'user':request.user})
+	return render_to_response('search_result.html',{"books":books,'user':request.user,'Tips':Tips})
 
 def subject(request, isbn):
     #try:

@@ -1,1 +1,3 @@
-uploadfile/*.pdf
+*.pdf
+*.pyc
+*.swp
