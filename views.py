@@ -63,8 +63,9 @@ def upload_result(request):
 		error = u'这本书已经存在！'
 		#return render_to_response('error.html',{'error':error})
                 return HttpResponseRedirect("/subject/%s/" % ISBN)
-        handle_uploaded_file(file_obj, ISBN)
+#        handle_uploaded_file(file_obj, ISBN)
 	return HttpResponseRedirect("/subject/%s/" % ISBN)
+
  
 
 def home(request):
@@ -101,39 +102,11 @@ def search_result(request):
 	books = [k for k,v in sorted(dict.items(),lambda x, y: -cmp(x[1], y[1]))]
 	return render_to_response('search_result.html',{"books":books,'user':request.user,'Tips':Tips})
 
-def subject(request, isbn):
-    #try:
-    book = Book.objects.get(ISBN=isbn)
-    comments = Comment.objects.filter(book=book)
-    #except :
 
-        #return render_to_response('error.html')
-    return render_to_response('subject.html', {'book':book,
-                                               'user':request.user,
-                                               'comments':comments} )
-
-# add comment to a subject book
-def subject_comment(request, isbn):
-    if request.user.is_authenticated:
-        try:
-            book = Book.objects.get(ISBN=isbn)
-            pub_date = datetime.date.today()
-            user = request.user
-            if request.method == 'POST':
-                content = request.POST['comment']
-            else:
-                content = None
-            if content:
-                Comment.objects.create(author=user,
-                                       book=book,
-                                       pub_date=pub_date,
-                                       content=content)
-
-        except :
-            print 'except'
-    return HttpResponseRedirect("/subject/%s/" % isbn)
+# about
 def about(request):
         return render_to_response('about.html', {'user':request.user})
+
 # contact
 def contact(request):
         return render_to_response('contact.html', {'user':request.user})
