@@ -1,6 +1,7 @@
 from django.conf.urls.defaults import patterns, include, url
 from BookStack.auth.views import signup_view,login_view,logout_view
-from BookStack.views import upload,upload_result,home,search_result,subject,download,about,contact,subject_comment
+from BookStack.books.views import subject,subject_comment
+from BookStack.views import upload,upload_result,home,search_result,download,about,contact
 from django.contrib import admin
 admin.autodiscover()
 #url
