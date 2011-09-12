@@ -3,13 +3,13 @@ from django.db import IntegrityError
 from django.http import HttpResponse,HttpResponseRedirect
 from django.shortcuts import render_to_response
 import json,urllib2,datetime
-from BookStack.books.models import Book,Comment
+from BookStack.books.models import Book
 import re
 import os
 
 def handle_uploaded_file(f,ISBN):
 	if f.name.find('.') != -1:
-		filename = ISBN+f.name[f.name.find('.'):]
+		filename = ISBN+f.name[f.name.rfind('.'):]
 	else:
 		filename = ISBN+'.txt'
 	print os.getcwd()
@@ -29,46 +29,42 @@ def upload(request):
                                       {'user':request.user })
 
 def upload_result(request):
-    if request.user.is_authenticated:
-        if request.method == 'POST':
-            ISBN = request.POST.get('ISBN','1').strip()
-            file_obj = request.FILES.get('file',None)
-            #handle_uploaded_file(file_obj, ISBN)
-        key = '04bbcb4043cc67600e3361c0cb653620'
-        url = 'http://api.douban.com/book/subject/isbn/%s?apikey=%s&alt=json'%(ISBN,key)
-        try:
-            req = urllib2.Request(url)
-            response = urllib2.urlopen(req)
-        except urllib2.HTTPError:
-            error = u'ISBN 不存在！'
-            return render_to_response('error.html',{'error':error})
-        html = json.loads(response.read())
-        bookdict = {}
-        for child in html['db:attribute']:
-            bookdict[child['@name']] = child['$t']
-        try:
-            pubdate = map(int,bookdict.get('pubdate','1990-1-1').split('-'))
-        except ValueError:
-            p = re.compile('\d{4}')
-            pubdate = map(int,p.findall(bookdict.get('pubdate','1990-1-1')))
-        while len(pubdate)<3:
-            if len(pubdate)==0:
-                pubdate = [1990]
-            pubdate.append(1)
-        image_src = html['link'][2]['@href'].replace('spic','lpic')
-        user = request.user
-        b1 = Book(title=bookdict.get('title','').encode('UTF-8'),author=bookdict.get('author',''),publisher=bookdict.get('publisher',''),publish_date=datetime.date(pubdate[0],pubdate[1],pubdate[2]),pages=int(bookdict.get('pages','0')),ISBN=bookdict.get('isbn13',''),image_src = image_src, user= user, upload_date=datetime.datetime.today())
-        try:
-            b1.save()
-        except IntegrityError:
-            error = u'这本书已经存在！'
-            #return render_to_response('error.html',{'error':error})
-            return HttpResponseRedirect("/subject/%s/" % ISBN)
-        handle_uploaded_file(file_obj, ISBN)
-        return HttpResponseRedirect("/subject/%s/" % ISBN)
-    else:
-        error = u'还没有登录'
-        return render_to_response('error.html',{'error':error})
+	if request.method == 'POST':
+		ISBN = request.POST.get('ISBN','1').strip()
+		file_obj = request.FILES.get('file',None)
+		handle_uploaded_file(file_obj, ISBN)
+	key = '04bbcb4043cc67600e3361c0cb653620'
+	url = 'http://api.douban.com/book/subject/isbn/%s?apikey=%s&alt=json'%(ISBN,key)
+	try:
+		req = urllib2.Request(url)
+		response = urllib2.urlopen(req)
+	except urllib2.HTTPError:
+		error = u'ISBN 不存在！'
+		return render_to_response('error.html',{'error':error})
+	html = json.loads(response.read())
+	bookdict = {}
+	for child in html['db:attribute']:
+		bookdict[child['@name']] = child['$t']
+	try:
+		pubdate = map(int,bookdict.get('pubdate','1990-1-1').split('-'))
+	except ValueError:
+		p = re.compile('\d{4}')
+		pubdate = map(int,p.findall(bookdict.get('pubdate','1990-1-1')))
+	while len(pubdate)<3:
+		if len(pubdate)==0:
+			pubdate = [1990]
+		pubdate.append(1)
+	image_src = html['link'][2]['@href'].replace('spic','lpic')
+	b1 = Book(title=bookdict.get('title','').encode('UTF-8'),author=bookdict.get('author',''),publisher=bookdict.get('publisher',''),publish_date=datetime.date(pubdate[0],pubdate[1],pubdate[2]),pages=int(bookdict.get('pages','0')),ISBN=bookdict.get('isbn13',''),image_src = image_src)
+	try:
+		b1.save()
+	except IntegrityError:
+		error = u'这本书已经存在！'
+		#return render_to_response('error.html',{'error':error})
+                return HttpResponseRedirect("/subject/%s/" % ISBN)
+#        handle_uploaded_file(file_obj, ISBN)
+	return HttpResponseRedirect("/subject/%s/" % ISBN)
+
  
 
 def home(request):
@@ -103,8 +99,12 @@ def search_result(request):
         # sort
 	books = [k for k,v in sorted(dict.items(),lambda x, y: -cmp(x[1], y[1]))]
 	return render_to_response('search_result.html',{"books":books,'user':request.user,'Tips':Tips})
+
+
+# about
 def about(request):
         return render_to_response('about.html', {'user':request.user})
+
 # contact
 def contact(request):
         return render_to_response('contact.html', {'user':request.user})
