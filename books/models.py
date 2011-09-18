@@ -1,9 +1,11 @@
 from django.db import models
-#from tagging import TagField
+#from tagging.fields import TagField
 from books import managers
 from django.contrib.auth.models import User
+#from django.contrib.tagging.fileds import TagField
 import datetime
 
+	
 # Book
 class Book(models.Model):
 	title = models.CharField(max_length = 100)
@@ -16,6 +18,7 @@ class Book(models.Model):
 	# add 
 	description = models.TextField()
 #	tags = TagField()
+	tags = models.CharField(max_length = 30)
 	upload_date = models.DateField(editable=False)
 	user = models.ForeignKey(User)
 	# Manager
@@ -68,3 +71,15 @@ class Bookmark(models.Model):
 #		if not self.id:
 #			self.date = datetime.datetime.now()
 #		super(Bookmark, self).save(force_insert, force_update)
+
+
+	
+# Tag
+# to find books about similar topic
+class Tag(models.Model):
+	tag = models.CharField(max_length = 100, unique = True)
+	books = models.ManyToManyField('Book')
+
+	# __str__ 
+	def __unicode__(self):
+		return self.tag

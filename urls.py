@@ -1,6 +1,6 @@
 from django.conf.urls.defaults import patterns, include, url
 from BookStack.auth.views import signup_view,login_view,logout_view
-from BookStack.books.views import subject,get_bookmarks,add_bookmark,delete_bookmark,subject_comment,popular_books
+from BookStack.books.views import subject,get_bookmarks,add_bookmark,delete_bookmark,subject_comment,popular_books,show_tags,tag_books_list
 from BookStack.views import upload,upload_result,home,search_result,download,about,contact
 from django.contrib import admin
 admin.autodiscover()
@@ -30,4 +30,6 @@ urlpatterns = patterns('',
                        (r'^subject/(\w+)/add_bookmark/$',add_bookmark),
                        (r'^bookmarks/$',get_bookmarks),
                        (r'^popular/$',popular_books),
+                       (r'^tags/$',show_tags),
+                       (r'^tags/(\w+)/$', tag_books_list),
                        )

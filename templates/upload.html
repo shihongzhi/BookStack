@@ -1,15 +1,12 @@
 {% extends "base.html" %}
 
 {% block content %}
-{%  if user.is_authenticated %}
 <div id="content"> 
 		<div id="search-form"> <form enctype="multipart/form-data" method="POST" action="/upload_result/">
-        ISBN:<input type="text" name="ISBN"><a href="http://book.douban.com/">不知道书本的ISBN？</a>
+        ISBN:<input type="text" name="ISBN">
+		Tags:<input type="text" name="Tags">
 	<input type="file" name="file"/>
         <input type="submit" value="Upload">
     </form></div>
-{% else %}
-<div id="content">用户需要登录才能上传文件</div>
-{% endif %}
 {% endblock %}
 

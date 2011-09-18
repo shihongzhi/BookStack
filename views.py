@@ -3,13 +3,14 @@ from django.db import IntegrityError
 from django.http import HttpResponse,HttpResponseRedirect
 from django.shortcuts import render_to_response
 import json,urllib2,datetime
-from BookStack.books.models import Book
+from BookStack.books.models import Book,Comment
 import re
+from BookStack import settings
 import os
 
 def handle_uploaded_file(f,ISBN):
 	if f.name.find('.') != -1:
-		filename = ISBN+f.name[f.name.rfind('.'):]
+		filename = ISBN+f.name[f.name.find('.'):]
 	else:
 		filename = ISBN+'.txt'
 	print os.getcwd()
@@ -32,7 +33,9 @@ def upload_result(request):
 	if request.method == 'POST':
 		ISBN = request.POST.get('ISBN','1').strip()
 		file_obj = request.FILES.get('file',None)
-		handle_uploaded_file(file_obj, ISBN)
+		# tags is a list
+		tags = request.POST.get('Tags',None).strip().split()
+		#handle_uploaded_file(file_obj, ISBN)
 	key = '04bbcb4043cc67600e3361c0cb653620'
 	url = 'http://api.douban.com/book/subject/isbn/%s?apikey=%s&alt=json'%(ISBN,key)
 	try:
@@ -55,9 +58,18 @@ def upload_result(request):
 			pubdate = [1990]
 		pubdate.append(1)
 	image_src = html['link'][2]['@href'].replace('spic','lpic')
+
 	b1 = Book(title=bookdict.get('title','').encode('UTF-8'),author=bookdict.get('author',''),publisher=bookdict.get('publisher',''),publish_date=datetime.date(pubdate[0],pubdate[1],pubdate[2]),pages=int(bookdict.get('pages','0')),ISBN=bookdict.get('isbn13',''),image_src = image_src)
 	try:
 		b1.save()
+		# add tags
+		for tag in tags:
+			try:
+				tt = Tag(tag=tag)
+				tt.save()
+			except IntegrityError:
+				pass
+			tt.books.add(b1)
 	except IntegrityError:
 		error = u'这本书已经存在！'
 		#return render_to_response('error.html',{'error':error})
@@ -68,6 +80,7 @@ def upload_result(request):
  
 
 def home(request):
+    books = Book.objects.all()
     return render_to_response('home.html',
                                       {'user':request.user })
 

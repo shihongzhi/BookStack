@@ -2,7 +2,7 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render_to_response
 from django.contrib.auth.decorators import login_required
-from books.models import Bookmark, Book, Comment
+from books.models import Bookmark, Book, Comment,Tag
 from django.views.generic.list_detail import object_list
 import datetime
 # Book
@@ -23,6 +23,18 @@ def popular_books(request):
                         template_name='popular_book.html',
                         paginate_by=20)
 
+# show tags
+def show_tags(request):
+    return object_list(request,
+                       queryset = Tag.objects.all(),
+                       template_name = 'tags.html')
+# show books with tags
+def tag_books_list(request, tag):
+    return object_list(request,
+                       queryset = Tag.objects.get(tag=tag).books.all(esh),
+                       template_name = 'books_with_tag.html',
+                       extra_context = {'tag':tag},
+                       paginate_by = 20)
 # Comment
 
 # add comment to a subject book

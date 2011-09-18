@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div id="search-tag-list"> 
+  <ul> 
+    <h2>Tags:</h2>
+
+
+	{% if object_list %}
+	{% for tag in object_list %}
+	<li class="tags"> 
+	  <div class="tag">
+		<a href= '/tags/{{ tag.tag }}'>{{ tag.tag }}</a>
+	  </div>	 <!-- tag -->
+	</li> 
+	{% endfor %}
+	{% else %}
+    <p>There are no Tag to display.</p>
+	{% endif %}
+  </ul>
+</div> <!-- search-tag-list -->
+</div> <!-- content -->
+{% endblock %}
