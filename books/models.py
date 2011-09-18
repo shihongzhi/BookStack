@@ -1,10 +1,19 @@
 from django.db import models
 #from tagging.fields import TagField
-from books import managers
+from BookStack.books import managers
 from django.contrib.auth.models import User
 #from django.contrib.tagging.fileds import TagField
 import datetime
 
+# Tag
+# to find books about similar topic
+class Tag(models.Model):
+	tag = models.CharField(max_length = 100, unique = True)
+	#books = models.ManyToManyField('Book')
+
+	# __str__ 
+	def __unicode__(self):
+		return self.tag
 	
 # Book
 class Book(models.Model):
@@ -21,6 +30,7 @@ class Book(models.Model):
 	tags = models.CharField(max_length = 30)
 	upload_date = models.DateField(editable=False)
 	user = models.ForeignKey(User)
+        tags = models.ManyToManyField(Tag)
 	# Manager
 	objects = managers.BookManager()
 	class Meta:
@@ -28,11 +38,11 @@ class Book(models.Model):
 	
 	def __unicode__(self):
 		return self.title
-	# save
-	def save(self):
+	# save /need add args and kwargs arugument ,if not will get an unexpected keyword argumetn 'force_insert'
+	def save(self,*args,**kwargs):
 		if not self.id:
 			self.upload_date = datetime.datetime.today()
-		super(Book, self).save()
+		super(Book, self).save(*args,**kwargs)
 	# get the url
 	@models.permalink
 	def get_absolute_url(self): 
@@ -72,14 +82,3 @@ class Bookmark(models.Model):
 #			self.date = datetime.datetime.now()
 #		super(Bookmark, self).save(force_insert, force_update)
 
-
-	
-# Tag
-# to find books about similar topic
-class Tag(models.Model):
-	tag = models.CharField(max_length = 100, unique = True)
-	books = models.ManyToManyField('Book')
-
-	# __str__ 
-	def __unicode__(self):
-		return self.tag
