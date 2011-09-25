@@ -2,7 +2,7 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render_to_response
 from django.contrib.auth.decorators import login_required
-from books.models import Bookmark, Book, Comment,Tag
+from BookStack.books.models import Bookmark, Book, Comment,Tag
 from django.views.generic.list_detail import object_list
 import datetime
 # Book
@@ -16,7 +16,8 @@ def subject(request, isbn):
         return render_to_response('error.html')
     return render_to_response('subject.html', {'book':book,
                                                'user':request.user,
-                                               'comments':comments} )
+                                               'comments':comments,
+                                               'tags':book.tags.all()} )
 # popular books
 def popular_books(request):
     return object_list(request, queryset=Book.objects.most_bookmarked(),
@@ -31,7 +32,7 @@ def show_tags(request):
 # show books with tags
 def tag_books_list(request, tag):
     return object_list(request,
-                       queryset = Tag.objects.get(tag=tag).books.all(esh),
+                       queryset = Tag.objects.get(tag=tag).book_set.all(),
                        template_name = 'books_with_tag.html',
                        extra_context = {'tag':tag},
                        paginate_by = 20)
