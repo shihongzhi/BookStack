@@ -3,16 +3,12 @@ from BookStack.auth.views import signup_view,login_view,logout_view
 from BookStack.books.views import subject,get_bookmarks,add_bookmark,delete_bookmark,subject_comment,popular_books,show_tags,tag_books_list
 from BookStack.views import upload,upload_result,home,search_result,download,about,contact
 from django.contrib import admin
+from BookStack import settings
 admin.autodiscover()
 #url
 urlpatterns = patterns('',
-                       # Examples:
-                           # url(r'^$', 'mysite.views.home', name='home'),
-                       # url(r'^mysite/', include('mysite.foo.urls')),
-
-                       # Uncomment the admin/doc line below to enable admin documentation:
-                           # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
-
+                       # static
+                       url(r'^static/(?P<path>.*)$','django.views.static.serve',{'document_root': settings.STATIC_ROOT}),
                        url(r'^admin/', include(admin.site.urls)),
                        (r'^upload/$', upload),
                        (r'^upload_result/$',upload_result),
@@ -33,4 +29,5 @@ urlpatterns = patterns('',
                        (r'^popular/$',popular_books),
                        (r'^tags/$',show_tags),
                        (r'^tags/(\w+)/$', tag_books_list),
+                      
                        )

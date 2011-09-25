@@ -4,15 +4,15 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /> 
 <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7" /> 
 <title>Python 书屋</title>
-<link rel="stylesheet" type="text/css" href="http://www.ppurl.com/static/css/style.css?v=262" media="screen" />
+<link rel="stylesheet" type="text/css" href="http://127.0.0.1:8000/static/css/style.css" media="screen" />
 </head>
 <body>
 
 <div id="container"> 
 	<div id="header"> 
-				<div class="intro"> 
+	  <div class="intro"> 
 			<h1><a href="/">Python书屋</a></h1> 
-			<div class="description">这里有一些还不错的Python电子书</div> 
+			<div class="description"> 这里有一些还不错的Python电子书，推荐给大家</div> 
 				</div> 
 		<div class="nav"> 
 			<ul class="clearfix"> 
@@ -41,6 +41,9 @@
 
 {% block content %}
 	<div id="content"> 
+	  <div class="search-logo">
+		<img border="0" src="http://www.google.com.hk//intl/zh-CN/images/logo_cn.png"/>
+	  </div> 
 	  <div id="search-form"> 
 		<form method="get" action="/search_result"> 
 		  <input type="text" value="" size="50" name="s" id="s" /> 
