@@ -73,11 +73,11 @@ def upload_result(request):
 	except IntegrityError:
 		error = u'这本书已经存在！'
 		#return render_to_response('error.html',{'error':error})
-                return HttpResponseRedirect("/subject/%s/" % ISBN)
+			return HttpResponseRedirect("/subject/%s/" % ISBN)
 #        handle_uploaded_file(file_obj, ISBN)
 	return HttpResponseRedirect("/subject/%s/" % ISBN)
 
- 
+
 
 def home(request):
     books = Book.objects.all()
@@ -92,7 +92,7 @@ def search_result(request):
 	if keys == '':
 		#error = u'搜索为空'
 		#return render_to_response('error.html',{'error':error})
-                render_to_response('home.html', {'user':request.user })
+			render_to_response('home.html', {'user':request.user })
 	dict = {}
 	for key in keys.split():
 		books = Book.objects.filter(title__icontains = key)
@@ -116,8 +116,8 @@ def search_result(request):
 
 # about
 def about(request):
-        return render_to_response('about.html', {'user':request.user})
+	return render_to_response('about.html', {'user':request.user})
 
 # contact
 def contact(request):
-        return render_to_response('contact.html', {'user':request.user})
+	return render_to_response('contact.html', {'user':request.user})
