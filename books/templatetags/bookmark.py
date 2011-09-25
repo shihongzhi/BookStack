@@ -34,10 +34,10 @@ def do_if_bookmarked(parser, token):
     except ValueError:
         raise template.TemplateSyntaxError, "%r tag requires two argument" % token.contents.split()[0]
 
-    nodelist_true = parser.parse(('else', 'endif_bookmarked')) 
+    nodelist_true = parser.parse(('else_bookmarked', 'endif_bookmarked')) 
     token = parser.next_token()
-    if token.contents == 'else':
-        nodelist_false = parser.parse(('else',))
+    if token.contents == 'else_bookmarked':
+        nodelist_false = parser.parse(('endif_bookmarked',))
         parser.delete_first_token()
     else:
         nodelist_false = template.NodeList()

@@ -19,21 +19,15 @@
 		   <p><span>作者：</span>{{ book.author }}</p><p><span>出版日期：</span>{{ book.publish_date }}</p>
 		   <p><span>出版社：</span>{{ book.publisher }}</p><p><span>页数：</span>{{ book.pages }}</p>
 		   <p><span>ISBN：</span>{{ book.ISBN }}</p>
-		   <p><span>Tags：</span>
-                      {% for tag in tags %}	
-                          <li class="tags"> 
-		               <a href= '/tags/{{ tag.tag }}'>{{ tag.tag }}</a>
-	                  </li>
-	              {% endfor %} </p>
 		 </div>
 		 {%  if user.is_authenticated %}
 		 {% if_bookmarked user book %}
-		  <form method="post" action="add_bookmark/">
-			<p><input type="submit" value="收藏本书"></p>
-		  </form>
-		  {% else %}
 		  <form method="post" action="delete_bookmark/">
 			<p><input type="submit" value="取消收藏"></p>
+		  </form>
+		  {% else_bookmarked %}
+		  <form method="post" action="add_bookmark/">
+			<p><input type="submit" value="收藏本书"></p>
 		  </form>
 		  {% endif_bookmarked %}
 		  {% endif %}

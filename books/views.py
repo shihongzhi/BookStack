@@ -80,14 +80,14 @@ def add_bookmark(request, isbn):
 
 # delete bookmark
 @login_required                 #  decorators @
-def delete_bookmark(request, book_id):
+def delete_bookmark(request, isbn):
     if request.method == 'POST':
-        book = get_object_or_404(Book, pk=book_id)
+        book = get_object_or_404(Book, ISBN=isbn)
         Bookmark.objects.filter(user__pk=request.user.id,
                                 book__pk=book.id).delete()
-        return HttpResponseRedirect(book.get_absolute_url())
+        return HttpResponseRedirect("/subject/%s/" % isbn)
     else:
-        return render_to_response('books/confirm_bookmark_delete.html',
+        return render_to_response('confirm_bookmark_delete.html',
                                   { 'book': book })
 
 
