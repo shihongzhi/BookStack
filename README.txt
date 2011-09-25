@@ -6,3 +6,7 @@ TODO list:
 2, popular的template的分页
 
 is everything ok?
+
+TODO list:
+1. a new CSS?
+2. some js for fun?
